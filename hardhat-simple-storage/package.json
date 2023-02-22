@@ -21,6 +21,6 @@
     "hardhat": "^2.12.7"
   },
   "dependencies": {
-    "node": "^19.6.0"
+    "node": "^19.0.0"
   }
 }
