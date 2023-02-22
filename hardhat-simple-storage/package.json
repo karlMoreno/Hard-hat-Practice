@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/karlMoreno/L-Oreal_Brandstorm#readme",
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.1",
     "hardhat": "^2.12.7"
+  },
+  "dependencies": {
+    "node": "^19.6.0"
   }
 }
