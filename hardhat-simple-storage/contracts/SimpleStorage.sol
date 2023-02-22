@@ -12,6 +12,10 @@ contract SimpleStorage {
         favoriteNumber = _favoriteNumber;
     }
 
+    function retrieve() public view returns (uint256) {
+        return favoriteNumber;
+    }
+
     struct People {
         uint256 favoriteNumber;
         string name;
@@ -24,6 +28,7 @@ contract SimpleStorage {
         // Can use bracket notation to search full object
         // or just type parameters as they are shown
         people.push(People(_favoriteNumber,_name));
+        //maps the name value to its favorite number so no need for indexing
         nameToFavoriteNumber[_name] = _favoriteNumber;
     }
 }
