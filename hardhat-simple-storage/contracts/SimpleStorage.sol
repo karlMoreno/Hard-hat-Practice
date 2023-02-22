@@ -5,6 +5,7 @@ contract SimpleStorage {
     // a contract that stores a favorite number, 
     // automatically initialzied to 0
     uint256 favoriteNumber;
+    People public person = People({favoriteNumber: 2, name: "Karl"});
 
     function store(uint256 _favoriteNumber) public{
         favoriteNumber = _favoriteNumber;
