@@ -5,7 +5,7 @@ require("hardhat-gas-reporter")
 
 /** @type import('hardhat/config').HardhatUserConfig */
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
-
+const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY
 module.exports = {
     defaultNetwork: "hardhat",
     networks: {
@@ -21,5 +21,10 @@ module.exports = {
     },
     gasReporter: {
       enabled:true,
+      outputFile: "gas-report.txt",
+      noColorts: true,
+      currency: "USD",
+      coinmarketcap: COINMARKETCAP_API_KEY,
+      token: "MATIC",
     },
 }
