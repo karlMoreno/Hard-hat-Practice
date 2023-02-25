@@ -1,1 +1,1 @@
-BasicNFT
+BASIC NFT
