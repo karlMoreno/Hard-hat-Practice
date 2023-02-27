@@ -6,6 +6,17 @@ module.exports = async function ({ getnamedAccounts, deployments }) {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
 
+
+    //IPFS 
+    if(process.env.UPLOAD_TO_PINATA == "true") {
+        tokenUris = await handleTokenUris()
+    }
+
+
+
+
+
+
     let vrfCoordinatorV2Address, subscriptionId
 
     if (developmentChains.includes(network.name)) {
@@ -29,4 +40,11 @@ module.exports = async function ({ getnamedAccounts, deployments }) {
         // tokenUris
         networkConfig[chainId].mintFee,
     ]
+}
+
+
+async function handleTokenUris() {
+    tokenUris = []
+
+    return tokenUris
 }
