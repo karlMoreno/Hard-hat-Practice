@@ -64,13 +64,49 @@ contract LotionNFT is ERC721, ERC721Enumerable {
         return (lotionNames[_tokenId], lotionDescriptions[_tokenId], ingredientsWallets, ingredientsNames);
     }
 
+    function addressToString(address _address) internal pure returns (string memory) {
+    bytes32 _bytes = bytes32(uint256(_address));
+    bytes memory HEX = "0123456789abcdef";
+    bytes memory _string = new bytes(42);
+
+    _string[0] = '0';
+    _string[1] = 'x';
+
+    for (uint i = 0; i < 20; i++) {
+        _string[2+i*2] = HEX[uint8(_bytes[i + 12] >> 4)];
+        _string[3+i*2] = HEX[uint8(_bytes[i + 12] & 0x0f)];
+    }
+
+    return string(_string);
+}
+
     function getLotionTokenURI(uint256 _tokenId) public view returns (string memory) {
-        (string memory name, string memory description, address[] memory ingredientsWallets, string[] memory ingredientsNames) = getLotion(_tokenId);
-        string memory tokenID = Strings.toString(_tokenId);
+    (string memory name, string memory description, address[] memory ingredientsWallets, string[] memory ingredientsNames) = getLotion(_tokenId);
+    string memory tokenID = Strings.toString(_tokenId);
 
-        string memory jsonString = string(abi.encodePacked(
-            '{"name":"', name, '", ',
-            '"description":"', description, '", ',
-            '"ingredients":['));
+    string memory jsonString = string(abi.encodePacked(
+        '{"name":"', name, '", ',
+        '"description":"', description, '", ',
+        '"ingredients":['));
 
-        for (uint i = 0; i < ingredientsWallets.length; i++)
+    for (uint i = 0; i < ingredientsWallets.length; i++) {
+        jsonString = string(abi.encodePacked(
+            jsonString,
+            '{"wallet":"', addressToString(ingredientsWallets[i]), '", ',
+            '"name":"', ingredientsNames[i], '"}'));
+
+        if (i < ingredientsWallets.length - 1) {
+            jsonString = string(abi.encodePacked(jsonString, ","));
+        }
+    }
+
+    jsonString = string(abi.encodePacked(
+        jsonString,
+        '], ',
+        '"wallet":"', addressToString(ownerOf(_tokenId)), '", ',
+        '"tokenID":"', tokenID, '"}'));
+
+    return string(abi.encodePacked("data:application/json;base64,", Base64.encode(bytes(jsonString))));
+}
+
+}
