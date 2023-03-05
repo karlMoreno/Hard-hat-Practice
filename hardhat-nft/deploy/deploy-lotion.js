@@ -2,14 +2,14 @@ const hre = require("hardhat");
 const fs = require("fs");
 
 async function deployContract() {
-  const CONTRACT_NAME = "LotionNFT";
+  const CONTRACT_NAME = "Lotion.sol";
   const [deployer] = await hre.ethers.getSigners();
   console.log("Deploying contract with the account:", deployer.address);
 
-  const contractFactory = await hre.ethers.getContractFactory("Lotion");
+  const contractFactory = await hre.ethers.getContractFactory(CONTRACT_NAME);
   const contract = await contractFactory.deploy();
   await contract.deployed();
-  console.log(`${Lotion} deployed to address: ${contract.address}`);
+  console.log(`${CONTRACT_NAME} deployed to address: ${contract.address}`);
 
   // Replace with your own lotion name, description, and ingredients
   const name = "My Lotion";
