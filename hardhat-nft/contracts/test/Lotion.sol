@@ -9,26 +9,26 @@ contract LotionNFT is ERC721 {
         address wallet;
         string name;
     }
-    
-    struct Lotion {
-        uint256 id;
-        string name;
-        string description;
-        Ingredient[] ingredients;
-    }
-    
-    Lotion[] private lotions;
-    
+
+    uint256 private lotionCounter;
+    mapping(uint256 => string) private lotionNames;
+    mapping(uint256 => string) private lotionDescriptions;
+    mapping(uint256 => Ingredient[]) private lotionIngredients;
+
     constructor() ERC721("LotionNFT", "LOTION") {}
-    
+
     function createLotion(string memory _name, string memory _description, Ingredient[] memory _ingredients) public {
-        uint256 newId = lotions.length;
-        lotions.push(Lotion(newId, _name, _description, _ingredients));
-        
+        uint256 newId = lotionCounter;
+        lotionCounter++;
+
+        lotionNames[newId] = _name;
+        lotionDescriptions[newId] = _description;
+        lotionIngredients[newId] = _ingredients;
+
         _safeMint(msg.sender, newId);
     }
-    
-    function getLotion(uint256 _tokenId) public view returns (Lotion memory) {
-        return lotions[_tokenId];
+
+    function getLotion(uint256 _tokenId) public view returns (string memory, string memory, Ingredient[] memory) {
+        return (lotionNames[_tokenId], lotionDescriptions[_tokenId], lotionIngredients[_tokenId]);
     }
 }
