@@ -2,51 +2,64 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "base64-sol/base64.sol";
 
 contract LotionNFT is ERC721 {
-  using Counters for Counters.Counter;
-  Counters.Counter private _tokenIds;
+    uint256 private _tokenIdTracker; // Tracks the current token ID for minting new NFTs
+    mapping(uint256 => address[3]) private _tokenData; // Maps token IDs to the addresses and ingredients used to create the lotion
+    string private _baseURI; // The base URI for token metadata
 
-  mapping(uint256 => address[3]) private _walletAddresses;
-  mapping(uint256 => string[6]) private _ingredients;
+    constructor(string memory name, string memory symbol, string memory baseURI) ERC721(name, symbol) {
+        _baseURI = baseURI;
+    }
 
-  constructor() ERC721("LotionNFT", "LNFT") {}
+    /**
+     * @dev Creates a new LotionNFT with the given wallet addresses and ingredients.
+     * @param wallet1 The address of the first wallet to use for ingredients.
+     * @param ingredient1FromWallet1 The first ingredient to use from the first wallet.
+     * @param ingredient2FromWallet1 The second ingredient to use from the first wallet.
+     * @param wallet2 The address of the second wallet to use for ingredients.
+     * @param ingredient1FromWallet2 The first ingredient to use from the second wallet.
+     * @param ingredient2FromWallet2 The second ingredient to use from the second wallet.
+     * @param wallet3 The address of the third wallet to use for ingredients.
+     * @param ingredient1FromWallet3 The first ingredient to use from the third wallet.
+     * @param ingredient2FromWallet3 The second ingredient to use from the third wallet.
+     * @return The token ID of the new LotionNFT.
+     */
+    function createLotion(
+        address wallet1,
+        string memory ingredient1FromWallet1,
+        string memory ingredient2FromWallet1,
+        address wallet2,
+        string memory ingredient1FromWallet2,
+        string memory ingredient2FromWallet2,
+        address wallet3,
+        string memory ingredient1FromWallet3,
+        string memory ingredient2FromWallet3
+    ) public returns (uint256) {
+        // Ensure all wallet addresses are valid
+        require(wallet1 != address(0) && wallet2 != address(0) && wallet3 != address(0), "Invalid address");
+        // Ensure all ingredient strings are non-empty
+        require(bytes(ingredient1FromWallet1).length > 0 && bytes(ingredient2FromWallet1).length > 0
+                && bytes(ingredient1FromWallet2).length > 0 && bytes(ingredient2FromWallet2).length > 0
+                && bytes(ingredient1FromWallet3).length > 0 && bytes(ingredient2FromWallet3).length > 0, "Invalid ingredients");
 
-  function createLotion(
-    address wallet1,
-    string memory ingredient1FromWallet1,
-    string memory ingredient2FromWallet1,
-    address wallet2,
-    string memory ingredient1FromWallet2,
-    string memory ingredient2FromWallet2,
-    address wallet3,
-    string memory ingredient1FromWallet3,
-    string memory ingredient2FromWallet3
-  ) public returns (uint256) {
-    _tokenIds.increment();
+        _tokenIdTracker++; // Increment the token ID tracker to assign a new token ID to the LotionNFT
 
-    uint256 newTokenId = _tokenIds.current();
-    _mint(msg.sender, newTokenId);
+        // Map the new token ID to the provided addresses and ingredients
+        _tokenData[_tokenIdTracker] = [wallet1, wallet2, wallet3];
 
-    _walletAddresses[newTokenId][0] = wallet1;
-    _walletAddresses[newTokenId][1] = wallet2;
-    _walletAddresses[newTokenId][2] = wallet3;
+        // Mint the new LotionNFT to the sender of the transaction
+        _mint(msg.sender, _tokenIdTracker);
 
-    _ingredients[newTokenId][0] = ingredient1FromWallet1;
-    _ingredients[newTokenId][1] = ingredient2FromWallet1;
-    _ingredients[newTokenId][2] = ingredient1FromWallet2;
-    _ingredients[newTokenId][3] = ingredient2FromWallet2;
-    _ingredients[newTokenId][4] = ingredient1FromWallet3;
-    _ingredients[newTokenId][5] = ingredient2FromWallet3;
+        // Return the new token ID
+        return _tokenIdTracker;
+    }
 
-    return newTokenId;
-  }
-
-  function getLotion(
-    uint256 tokenId
-  ) public view returns (address[3] memory, string[6] memory) {
-    require(_exists(tokenId), "Lotion does not exist");
-    return (_walletAddresses[tokenId], _ingredients[tokenId]);
-  }
-}
+    /**
+     * @dev Returns the metadata URI for the given token ID.
+     * @param tokenId The ID of the token to get the metadata for.
+     * @return The metadata URI for the given token ID.
+     */
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+       

@@ -4,9 +4,7 @@ async function main() {
   const LotionNFT = await ethers.getContractFactory("LotionNFT");
   const lotionNFT = await LotionNFT.deploy();
 
-  await lotionNFT.deployed();
-
-  console.log("LotionNFT contract deployed to:", lotionNFT.address);
+  console.log("LotionNFT deployed to:", lotionNFT.address);
 }
 
 main()
