@@ -1,0 +1,2 @@
+LotionNFT.getLotion()
+getLotion()
