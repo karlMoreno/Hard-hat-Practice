@@ -1,0 +1,35 @@
+{
+    "name": "Ethical Lotion",
+    "description": "An NFT that contains the wallet addresses and ingredients for three different addresses.",
+    "image": "https://example.com/image.jpg",
+    "attributes": [
+      {
+        "trait_type": "Address 1",
+        "value": "0x1234567890123456789012345678901234567890",
+        "ingredients": [
+          "Sugar",
+          "Flour"
+        ],
+        "link": "https://example.com/wallet1"
+      },
+      {
+        "trait_type": "Address 2",
+        "value": "0x2345678901234567890123456789012345678901",
+        "ingredients": [
+          "Butter",
+          "Chocolate"
+        ],
+        "link": "https://example.com/wallet2"
+      },
+      {
+        "trait_type": "Address 3",
+        "value": "0x3456789012345678901234567890123456789012",
+        "ingredients": [
+          "Eggs",
+          "Milk"
+        ],
+        "link": "https://example.com/wallet3"
+      }
+    ]
+  }
+  
